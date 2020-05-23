@@ -7,7 +7,7 @@ const Button = (props) => (
   </button>
 )
 
-const Display = props => <div>{props.value}</div>
+const Display = props => <div> {props.text}{props.value}</div>
 
 
 const App = () => {
@@ -15,6 +15,10 @@ const App = () => {
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
+  const all = good + neutral + bad 
+  const avg = (good - bad) / all || 0
+  const pos = (good / all) * 100 || 0
+
 
   return (
     <div>
@@ -23,13 +27,16 @@ const App = () => {
       <Button handleClick={() => setNeutral(neutral + 1)} text="neutral" />
       <Button handleClick={() => setBad(bad + 1)} text="bad" />
       <h1>statistics</h1>
-      <Display value={good} />
-      <Display value={neutral} />
-      <Display value={bad} />
+      <Display text="good " value={good} />
+      <Display text="neutral " value={neutral} />
+      <Display text="bad " value={bad} />
+      <Display text="all " value={all} />
+      <Display text="average " value={avg} />
+      <Display text="positive " value={pos + ' %'} />
     </div>
   )
 }
 
-ReactDOM.render(<App />, 
+ReactDOM.render(<App />,
   document.getElementById('root')
 )
