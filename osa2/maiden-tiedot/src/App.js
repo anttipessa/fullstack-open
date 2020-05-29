@@ -6,13 +6,13 @@ const App = () => {
 
   const [countries, setCountries] = useState([])
   const [searchValue, setSearchValue] = useState('')
+  
 
   const hook = () => {
     axios
       .get('https://restcountries.eu/rest/v2/all')
       .then(response => {
         setCountries(response.data)
-        console.log(response)
       })
   }
   useEffect(hook, [])
