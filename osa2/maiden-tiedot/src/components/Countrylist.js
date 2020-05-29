@@ -1,10 +1,9 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Country from './Country'
 
-const Countrylist = ({ count }) => {
-    console.log(count.length)
+const Countrylist = ({ count, handler }) => {
 
-    if (count.length == 1  ) {
+    if (count.length === 1) {
         return (
             <div>
                 {count.map((country, i) =>
@@ -16,13 +15,13 @@ const Countrylist = ({ count }) => {
     } else if (count.length <= 10) {
         return (
             <div>
-                {count.map((country) =>
-                 <div>{country.name}</div> 
+                {count.map((country, i) =>
+                    <div key={i} > {country.name}  <button onClick={() => handler(country.name)}>show</button></div>
                 )}
 
             </div>
         )
-    } else{
+    } else {
         return (
             <div>Too many matches, specify another filter</div>
         )

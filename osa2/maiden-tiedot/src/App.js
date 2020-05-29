@@ -21,6 +21,10 @@ const App = () => {
     setSearchValue(event.target.value)
   }
 
+  const handleShowButtonClick = (name) => {
+    setSearchValue(name)
+  }
+
   const filterCountries = null ? countries : countries.filter(country => country.name.toLowerCase().includes(searchValue.toLowerCase()))
 
   return (
@@ -28,7 +32,7 @@ const App = () => {
       <p>find countries</p>
       <input value={searchValue}
         onChange={handleSearchChange} />
-      <Countrylist count={filterCountries} />
+      <Countrylist count={filterCountries} handler={handleShowButtonClick} />
     </div>
   );
 }
