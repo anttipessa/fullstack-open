@@ -47,6 +47,25 @@ const App = () => {
     }
   }
 
+  const deleteUser = (name, id) => {
+
+    const result = window.confirm(`Delete '${name}' ?`);
+    if (result) {
+      personsService
+        .deleteUser(id)
+        .then(returnedNote => {
+          setPersons(persons.filter((person => person.name !== name)))
+        })
+        .catch(error => {
+          alert(
+            `'${name}' was already deleted from server`
+          )
+        })
+    }
+
+  }
+
+
   const handleNameChange = (event) => {
     setNewName(event.target.value)
   }
@@ -69,7 +88,7 @@ const App = () => {
       <Form submit={addPerson} name={newName} nameChange={handleNameChange} number={newNumber} numberChange={handleNumberChange} />
       <h3>Numbers</h3>
       {filterPersons.map((person, i) =>
-        <Person key={i} name={person.name} number={person.number} />
+        <Person key={i} name={person.name} number={person.number} del={() => deleteUser(person.name, person.id)} />
       )}
     </div>
   )
