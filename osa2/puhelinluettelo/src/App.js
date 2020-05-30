@@ -3,12 +3,15 @@ import Person from './components/Person'
 import Filter from './components/Filter'
 import Form from './components/Form'
 import personsService from './services/persons'
+import Notification from './components/Notification'
+
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [searchValue, setSearchValue] = useState('')
+  const [message, setMessage] = useState(null)
 
   useEffect(() => {
     personsService
@@ -38,6 +41,10 @@ const App = () => {
               setPersons((persons.map(p => p.id !== person.id ? p : returnedPerson)))
               setNewName('')
               setNewNumber('')
+              setMessage(`User ${person.name} number was changed to ${newNumber}`)
+              setTimeout(() => {
+                setMessage(null)
+              }, 2000)
             })
         }
         setNewName('')
@@ -54,6 +61,10 @@ const App = () => {
           setNewName('')
           setNewNumber('')
         })
+      setMessage(`User ${newName} was added`)
+      setTimeout(() => {
+        setMessage(null)
+      }, 2000)
     }
   }
 
@@ -71,9 +82,14 @@ const App = () => {
             `'${name}' was already deleted from server`
           )
         })
+      setMessage(`User ${name} was deleted`)
+      setTimeout(() => {
+        setMessage(null)
+      }, 2000)
     }
 
   }
+
 
 
   const handleNameChange = (event) => {
@@ -93,6 +109,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} />
       <Filter searchValue={searchValue} handleSearchChange={handleSearchChange} />
       <h3>add a new</h3>
       <Form submit={addPerson} name={newName} nameChange={handleNameChange} number={newNumber} numberChange={handleNumberChange} />
