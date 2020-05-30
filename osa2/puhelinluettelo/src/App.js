@@ -18,7 +18,6 @@ const App = () => {
       })
   }, [])
 
-
   const addPerson = (event) => {
     event.preventDefault()
 
