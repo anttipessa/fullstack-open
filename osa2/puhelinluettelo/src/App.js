@@ -25,17 +25,28 @@ const App = () => {
       name: newName,
       number: newNumber
     }
-    let duplicate = false
+
+    let change = false
     persons.forEach(person => {
       if (person.name === newName) {
-        window.alert(`${newName} is already added to phonebook`)
-        duplicate = true
+        const result = window.confirm(`${newName} is already added to phonebook, replace number with a new one?`)
+        change = true
+        if (result) {
+          personsService
+            .update(person.id, personObject)
+            .then(returnedPerson => {
+              setPersons((persons.map(p => p.id !== person.id ? p : returnedPerson)))
+              setNewName('')
+              setNewNumber('')
+            })
+        }
         setNewName('')
+        setNewNumber('')
         return
       }
     })
 
-    if (duplicate === false) {
+    if (change === false) {
       personsService
         .create(personObject)
         .then(returnedPerson => {
@@ -43,7 +54,6 @@ const App = () => {
           setNewName('')
           setNewNumber('')
         })
-
     }
   }
 
