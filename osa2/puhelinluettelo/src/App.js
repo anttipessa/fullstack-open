@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import Person from './components/Person'
 import Filter from './components/Filter'
 import Form from './components/Form'
+import personsService from './services/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -10,14 +10,13 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [searchValue, setSearchValue] = useState('')
 
-  const hook = () => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
+  useEffect(() => {
+    personsService
+      .getAll()
+      .then(initial => {
+        setPersons(initial)
       })
-  }
-  useEffect(hook, [])
+  }, [])
 
 
   const addPerson = (event) => {
@@ -27,9 +26,7 @@ const App = () => {
       name: newName,
       number: newNumber
     }
-
     let duplicate = false
-
     persons.forEach(person => {
       if (person.name === newName) {
         window.alert(`${newName} is already added to phonebook`)
@@ -40,9 +37,14 @@ const App = () => {
     })
 
     if (duplicate === false) {
-      setPersons(persons.concat(personObject))
-      setNewName('')
-      setNewNumber('')
+      personsService
+        .create(personObject)
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson))
+          setNewName('')
+          setNewNumber('')
+        })
+
     }
   }
 
