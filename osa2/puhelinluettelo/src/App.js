@@ -29,43 +29,33 @@ const App = () => {
       number: newNumber
     }
 
-    let change = false
-    persons.forEach(person => {
-      if (person.name === newName) {
-        const result = window.confirm(`${newName} is already added to phonebook, replace number with a new one?`)
-        change = true
-        if (result) {
-          personsService
-            .update(person.id, personObject)
-            .then(returnedPerson => {
-              setPersons((persons.map(p => p.id !== person.id ? p : returnedPerson)))
-              setNewName('')
-              setNewNumber('')
-              setMessage(`User ${person.name} number was changed to ${newNumber}`)
-              setTimeout(() => {
-                setMessage(null)
-              }, 2000)
-            })
-        }
-        setNewName('')
-        setNewNumber('')
-        return
-      }
-    })
-
-    if (change === false) {
+    if (!persons.find(p => p.name === newName)) {
       personsService
         .create(personObject)
         .then(returnedPerson => {
           setPersons(persons.concat(returnedPerson))
-          setNewName('')
-          setNewNumber('')
+          printMessage(`User ${newName} was added`)
         })
-      setMessage(`User ${newName} was added`)
-      setTimeout(() => {
-        setMessage(null)
-      }, 2000)
+        .catch(error => {
+          printMessage(`Error ${newName} was already added to the phonebook`)
+        })
+    } else {
+      const result = window.confirm(`${newName} is already added to phonebook, replace number with a new one?`)
+      if (result) {
+        const id = persons.filter(person => person.name === newName)[0].id
+        personsService
+          .update(id, personObject)
+          .then(returnedPerson => {
+            setPersons((persons.map(p => p.id !== id ? p : returnedPerson)))
+            printMessage(`User ${newName} number was changed to ${newNumber}`)
+          })
+          .catch(error => {
+            printMessage(`Error Information ${newName} has already been deleted from server`)
+          })
+      }
     }
+    setNewName('')
+    setNewNumber('')
   }
 
   const deleteUser = (name, id) => {
@@ -76,21 +66,22 @@ const App = () => {
         .deleteUser(id)
         .then(returnedNote => {
           setPersons(persons.filter((person => person.name !== name)))
+          printMessage(`User ${name} was deleted`)
         })
         .catch(error => {
-          alert(
-            `'${name}' was already deleted from server`
-          )
+          printMessage(`Error ${name} was already deleted from server`)
         })
-      setMessage(`User ${name} was deleted`)
-      setTimeout(() => {
-        setMessage(null)
-      }, 2000)
     }
 
   }
 
 
+  const printMessage = (message) => {
+    setMessage(message)
+    setTimeout(() => {
+      setMessage(null)
+    }, 2000)
+  }
 
   const handleNameChange = (event) => {
     setNewName(event.target.value)
