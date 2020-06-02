@@ -55,30 +55,33 @@ const generateId = () => {
 
 app.post('/api/persons', (request, response) => {
     const body = request.body
+    const duplicate = persons.find(p => p.name === body.name)
 
-    if (!body.content) {
+    if (!body.name || !body.number) {
         return response.status(400).json({
             error: 'content missing'
         })
+    } else if (duplicate) {
+        return response.status(400).json({
+            error: 'name must be unique'
+        })
     }
 
-    const note = {
-        content: body.content,
-        important: body.important || false,
-        date: new Date(),
-        id: generateId(),
+    const person = {
+        name: body.name,
+        number: body.number,
+        id: Math.floor(Math.random() * 999999)
     }
 
-    notes = notes.concat(note)
+    persons = persons.concat(person)
 
-    response.json(note)
+    response.json(person)
 })
 
 
-app.delete('/api/notes/:id', (request, response) => {
+app.delete('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
-    notes = notes.filter(note => note.id !== id)
-
+    persons = persons.find(person => person.id !== id)
     response.status(204).end()
 })
 
