@@ -35,6 +35,17 @@ app.get('/info', (req, res) => {
     ${new Date()}`)
 })
 
+app.get('/api/persons/:id', (request, response) => {
+    const id = Number(request.params.id)
+    const person = persons.find(person => person.id === id)
+    if (person) {
+        response.json(person)
+    } else {
+        response.status(404).end()
+    }
+})
+
+
 const generateId = () => {
     const maxId = persons.length > 0
         ? Math.max(...persons.map(n => n.id))
@@ -63,15 +74,6 @@ app.post('/api/persons', (request, response) => {
     response.json(note)
 })
 
-app.get('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    const note = persons.find(person => note.id === id)
-    if (note) {
-        response.json(person)
-    } else {
-        response.status(404).end()
-    }
-})
 
 app.delete('/api/notes/:id', (request, response) => {
     const id = Number(request.params.id)
