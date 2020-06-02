@@ -1,7 +1,9 @@
 const express = require('express')
+const morgan = require('morgan')
 const app = express()
 
 app.use(express.json())
+app.use(morgan('tiny'))
 
 let persons = [
     {
@@ -45,14 +47,6 @@ app.get('/api/persons/:id', (request, response) => {
     }
 })
 
-
-const generateId = () => {
-    const maxId = persons.length > 0
-        ? Math.max(...persons.map(n => n.id))
-        : 0
-    return maxId + 1
-}
-
 app.post('/api/persons', (request, response) => {
     const body = request.body
     const duplicate = persons.find(p => p.name === body.name)
@@ -74,7 +68,6 @@ app.post('/api/persons', (request, response) => {
     }
 
     persons = persons.concat(person)
-
     response.json(person)
 })
 
