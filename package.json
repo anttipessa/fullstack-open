@@ -1,0 +1,6 @@
+{
+    "scripts": {
+        "build": "cd ./osa3/puhelinluettelo-frontend && npm install && npm run build && mv ./build/ ../../build/ && cd ../puhelinluettelo-backend && npm install && cp -R ./. ../../",
+        "start": "node index.js"
+    }
+}
