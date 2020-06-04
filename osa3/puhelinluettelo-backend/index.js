@@ -37,15 +37,10 @@ app.get('/api/persons/:id', (request, response, next) => {
 
 app.post('/api/persons', (request, response, next) => {
     const body = request.body
-    const duplicate = persons.find(p => p.name === body.name)
 
     if (!body.name || !body.number) {
         return response.status(400).json({
             error: 'content missing'
-        })
-    } else if (duplicate) {
-        return response.status(400).json({
-            error: 'name must be unique'
         })
     }
 
@@ -83,11 +78,21 @@ app.delete('/api/persons/:id', (request, response, next) => {
         .catch(error => next(error))
 })
 
+const validationError = (error, request, response, next) => {
+    if (error.name === "ValidationError") {
+      return response.status(422).send({ error: error.message });
+    }
+    next(error);
+  };
+  
+  app.use(validationError)
+  
 const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknown endpoint' })
 }
 
 app.use(unknownEndpoint)
+
 
 const errorHandler = (error, request, response, next) => {
     console.error(error.message)
