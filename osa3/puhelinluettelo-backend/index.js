@@ -79,14 +79,14 @@ app.delete('/api/persons/:id', (request, response, next) => {
 })
 
 const validationError = (error, request, response, next) => {
-    if (error.name === "ValidationError") {
-      return response.status(422).send({ error: error.message });
+    if (error.name === 'ValidationError') {
+        return response.status(422).send({ error: error.message });
     }
-    next(error);
-  };
-  
-  app.use(validationError)
-  
+    next(error)
+}
+
+app.use(validationError)
+
 const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknown endpoint' })
 }
@@ -97,7 +97,7 @@ app.use(unknownEndpoint)
 const errorHandler = (error, request, response, next) => {
     console.error(error.message)
 
-    if (error.name === 'CastError' && error.kind == 'ObjectId') {
+    if (error.name === 'CastError' && error.kind === 'ObjectId') {
         return response.status(400).send({ error: 'malformatted id' })
     }
 
