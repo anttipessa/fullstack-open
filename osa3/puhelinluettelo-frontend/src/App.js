@@ -37,7 +37,7 @@ const App = () => {
           printMessage(`User ${newName} was added`)
         })
         .catch(error => {
-          printMessage(`Error ${newName} was already added to the phonebook`)
+          printMessage(`${error.response.data.error} `, 'error')
         })
     } else {
       const result = window.confirm(`${newName} is already added to phonebook, replace number with a new one?`)
@@ -50,7 +50,7 @@ const App = () => {
             printMessage(`User ${newName} number was changed to ${newNumber}`)
           })
           .catch(error => {
-            printMessage(`Error Information ${newName} has already been deleted from server`)
+            printMessage(`${error.response.data.error} `, 'error')
           })
       }
     }
@@ -69,18 +69,18 @@ const App = () => {
           printMessage(`User ${name} was deleted`)
         })
         .catch(error => {
-          printMessage(`Error ${name} was already deleted from server`)
+          printMessage(`${name} was already deleted from server `, 'error')
         })
     }
 
   }
 
 
-  const printMessage = (message) => {
-    setMessage(message)
+  const printMessage = (message, type = 'success') => {
+    setMessage({ message, type })
     setTimeout(() => {
       setMessage(null)
-    }, 2000)
+    }, 3000)
   }
 
   const handleNameChange = (event) => {
@@ -100,7 +100,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={message} />
+      <Notification notification={message} />
       <Filter searchValue={searchValue} handleSearchChange={handleSearchChange} />
       <h3>add a new</h3>
       <Form submit={addPerson} name={newName} nameChange={handleNameChange} number={newNumber} numberChange={handleNumberChange} />
