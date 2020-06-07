@@ -39,11 +39,28 @@ describe('total likes', () => {
 })
 
 describe('favoriteBlog', () => {
-    const most =  { _id: "5a422b3a1b54a676234d17f9", title: "Canonical string reduction", author: "Edsger W. Dijkstra", url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html", likes: 12, __v: 0 }
+    const most = { _id: "5a422b3a1b54a676234d17f9", title: "Canonical string reduction", author: "Edsger W. Dijkstra", url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html", likes: 12, __v: 0 }
     test('find blog with most likes', () => {
         const result = listHelper.favoriteBlog(blogs)
         expect(result).toEqual(most)
     })
+    test('of empty list is zero', () => {
+        const result = listHelper.favoriteBlog([])
+        expect(result).toBe(0)
+    })
+})
+
+describe('mostBlog', () => {
+    const most = {
+        author: "Robert C. Martin",
+        blogs: 3
+    }
+
+    test('finds author with most blogs', () => {
+        const result = listHelper.mostBlogs(blogs)
+        expect(result).toEqual(most)
+    })
+
     test('of empty list is zero', () => {
         const result = listHelper.favoriteBlog([])
         expect(result).toBe(0)
