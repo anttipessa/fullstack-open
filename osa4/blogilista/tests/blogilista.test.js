@@ -32,3 +32,8 @@ beforeEach(async () => {
     expect(response.body.length).toBe(helper.initialBlogs.length)
   })
   
+  
+  test.only('blogs contain id field', async () => {
+    const response = await api.get('/api/blogs')
+    expect(response.body[0].id).toBeDefined()
+  })
