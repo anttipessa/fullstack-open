@@ -33,7 +33,30 @@ beforeEach(async () => {
   })
   
   
-  test.only('blogs contain id field', async () => {
+  test('blogs contain id field', async () => {
     const response = await api.get('/api/blogs')
     expect(response.body[0].id).toBeDefined()
+  })
+
+  test('a valid blog can be added ', async () => {
+    const newBlog = {
+      title: "Type wars", 
+      author: "Robert C. Martin",
+      url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
+      likes: 2
+    }
+  
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+  
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd.length).toBe(helper.initialBlogs.length + 1)
+  
+    const title = blogsAtEnd.map(n => n.title)
+    expect(title).toContain(
+      'Type wars'
+    )
   })
