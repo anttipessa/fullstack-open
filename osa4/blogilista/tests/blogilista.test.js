@@ -54,7 +54,7 @@ test('a valid blog can be added ', async () => {
 
   const blogsAtEnd = await helper.blogsInDb()
   expect(blogsAtEnd.length).toBe(helper.initialBlogs.length + 1)
-  
+
   const title = blogsAtEnd.map(n => n.title)
   expect(title).toContain(
     'Type wars'
@@ -77,4 +77,16 @@ test('new blog gets 0 likes on default', async () => {
   const blogsAtEnd = await helper.blogsInDb()
   const like = blogsAtEnd.map(n => n.likes)
   expect(like[2]).toBe(0)
+})
+
+test('cant add blog without title and url', async () => {
+  const newBlog = {
+    author: "Robert C. Martin",
+    likes: 11
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
 })
