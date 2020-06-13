@@ -37,7 +37,7 @@ test('blogs contain id field', async () => {
   const response = await api.get('/api/blogs')
   expect(response.body[0].id).toBeDefined()
 })
-
+describe('adding a new note', () => {
 test('a valid blog can be added ', async () => {
   const newBlog = {
     title: "Type wars",
@@ -90,7 +90,7 @@ test('cant add blog without title and url', async () => {
     .send(newBlog)
     .expect(400)
 })
-
+})
 
 describe('deletion of a blog', () => {
   test('succeeds with status code 204 if id is valid', async () => {
@@ -110,5 +110,25 @@ describe('deletion of a blog', () => {
     const titles = blogsAtEnd.map(r => r.title)
 
     expect(titles).not.toContain(blogToDelete.title)
+  })
+})
+
+describe('update of a blog', () => {
+  test('succeeds with status code 204 if id is valid', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToUpdate = blogsAtStart[0]
+
+    const update = {
+      author: "update the author",
+      likes: 999
+    }
+
+    await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(update)
+      .expect(204)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd[0].likes).toBe(999)
   })
 })
