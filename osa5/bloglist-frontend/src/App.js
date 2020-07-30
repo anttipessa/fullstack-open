@@ -11,6 +11,9 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -81,6 +84,59 @@ const App = () => {
     </form>
   )
 
+  const blogForm = () => (
+    <form onSubmit={addBlog}>
+      <div>title:
+        <input
+          value={title}
+          onChange={handleTitleChange}
+        />
+      </div>
+      <div>author:
+        <input
+          value={author}
+          onChange={handleAuthorChange}
+        />
+      </div>
+      <div>url:
+        <input
+          value={url}
+          onChange={handleUrlChange}
+        />
+      </div>
+      <button type="submit">create</button>
+    </form>
+  )
+
+  const addBlog = (event) => {
+    event.preventDefault()
+    const blogObject = {
+      title,
+      author,
+      url,
+    }
+
+    blogService
+      .create(blogObject)
+      .then(returnedBlog => {
+        setBlogs(blogs.concat(returnedBlog))
+        setTitle('')
+        setAuthor('')
+        setUrl('')
+      })
+  }
+
+  const handleTitleChange = (event) => {
+    setTitle(event.target.value)
+  }
+
+  const handleAuthorChange = (event) => {
+    setAuthor(event.target.value)
+  }
+
+  const handleUrlChange = (event) => {
+    setUrl(event.target.value)
+  }
 
   if (user === null) {
     return (
@@ -96,6 +152,8 @@ const App = () => {
     <div>
       <h2>blogs</h2>
       <p> {user.username} logged in <button onClick={handleLogout}>logout</button></p>
+      <h2>create new</h2>
+      {blogForm()}
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
