@@ -7,7 +7,7 @@ import './App.css'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [message, setMessage] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -45,12 +45,17 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
-    } catch (exception) {
-      setErrorMessage('wrong credentials')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      printMessage(`Welcome back ${user.username}!`)
+    } catch (error) {
+      printMessage('wrong credentials', 'error')
     }
+  }
+
+  const printMessage = (message, type = 'success') => {
+    setMessage({ message, type })
+    setTimeout(() => {
+      setMessage(null)
+    }, 4000)
   }
 
   const handleLogout = async (event) => {
@@ -58,6 +63,7 @@ const App = () => {
     window.localStorage.removeItem(
       'loggedUser'
     )
+    printMessage(`Logout successful! See you around, ${user.username}!`)
   }
 
   const loginForm = () => (
@@ -113,17 +119,22 @@ const App = () => {
     const blogObject = {
       title,
       author,
-      url,
+      url
     }
 
     blogService
       .create(blogObject)
       .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
+        printMessage(`Blog ${title} succesfully added!`)
         setTitle('')
         setAuthor('')
         setUrl('')
       })
+      .catch(error => {
+        printMessage(`${error.response.data.error} `, 'error')
+      })
+
   }
 
   const handleTitleChange = (event) => {
@@ -141,7 +152,7 @@ const App = () => {
   if (user === null) {
     return (
       <div>
-        <Notification message={errorMessage} />
+        <Notification notification={message} />
         <h2>Log in to application</h2>
         {loginForm()}
       </div>
@@ -150,6 +161,7 @@ const App = () => {
 
   return (
     <div>
+      <Notification notification={message} />
       <h2>blogs</h2>
       <p> {user.username} logged in <button onClick={handleLogout}>logout</button></p>
       <h2>create new</h2>
