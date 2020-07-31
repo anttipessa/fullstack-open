@@ -38,6 +38,7 @@ module.exports = {
             'never'
         ],
         'no-unused-vars': 0,
-        "react/prop-types": 0
+        "react/prop-types": 0,
+        "react/display-name": 0
     }
 }

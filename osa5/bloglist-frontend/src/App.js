@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import './App.css'
@@ -14,6 +15,8 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+
+  const blogFormRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -91,27 +94,29 @@ const App = () => {
   )
 
   const blogForm = () => (
-    <form onSubmit={addBlog}>
-      <div>title:
-        <input
-          value={title}
-          onChange={handleTitleChange}
-        />
-      </div>
-      <div>author:
-        <input
-          value={author}
-          onChange={handleAuthorChange}
-        />
-      </div>
-      <div>url:
-        <input
-          value={url}
-          onChange={handleUrlChange}
-        />
-      </div>
-      <button type="submit">create</button>
-    </form>
+    <Togglable buttonLabel='new blog' ref={blogFormRef}>
+      <form onSubmit={addBlog}>
+        <div>title:
+          <input
+            value={title}
+            onChange={handleTitleChange}
+          />
+        </div>
+        <div>author:
+          <input
+            value={author}
+            onChange={handleAuthorChange}
+          />
+        </div>
+        <div>url:
+          <input
+            value={url}
+            onChange={handleUrlChange}
+          />
+        </div>
+        <button type="submit">create</button>
+      </form>
+    </Togglable>
   )
 
   const addBlog = (event) => {
@@ -121,7 +126,7 @@ const App = () => {
       author,
       url
     }
-
+    blogFormRef.current.toggleVisibility()
     blogService
       .create(blogObject)
       .then(returnedBlog => {
