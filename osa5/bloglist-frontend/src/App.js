@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
+import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import './App.css'
@@ -12,9 +13,6 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
 
   const blogFormRef = useRef()
 
@@ -93,66 +91,24 @@ const App = () => {
     </form>
   )
 
-  const blogForm = () => (
-    <Togglable buttonLabel='new blog' ref={blogFormRef}>
-      <form onSubmit={addBlog}>
-        <div>title:
-          <input
-            value={title}
-            onChange={handleTitleChange}
-          />
-        </div>
-        <div>author:
-          <input
-            value={author}
-            onChange={handleAuthorChange}
-          />
-        </div>
-        <div>url:
-          <input
-            value={url}
-            onChange={handleUrlChange}
-          />
-        </div>
-        <button type="submit">create</button>
-      </form>
-    </Togglable>
-  )
-
-  const addBlog = (event) => {
-    event.preventDefault()
-    const blogObject = {
-      title,
-      author,
-      url
-    }
+  const addBlog = (blogObject) => {
     blogFormRef.current.toggleVisibility()
     blogService
       .create(blogObject)
       .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
-        printMessage(`Blog ${title} succesfully added!`)
-        setTitle('')
-        setAuthor('')
-        setUrl('')
+        printMessage('Blog succesfully added!')
       })
       .catch(error => {
         printMessage(`${error.response.data.error} `, 'error')
       })
-
   }
 
-  const handleTitleChange = (event) => {
-    setTitle(event.target.value)
-  }
-
-  const handleAuthorChange = (event) => {
-    setAuthor(event.target.value)
-  }
-
-  const handleUrlChange = (event) => {
-    setUrl(event.target.value)
-  }
+  const blogForm = () => (
+    <Togglable buttonLabel='new blog' ref={blogFormRef}>
+      <BlogForm createBlog={addBlog} />
+    </Togglable>
+  )
 
   if (user === null) {
     return (
@@ -178,8 +134,5 @@ const App = () => {
     </div>
   )
 }
-
-
-
 
 export default App
