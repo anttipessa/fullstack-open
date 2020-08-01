@@ -104,6 +104,20 @@ const App = () => {
       })
   }
 
+
+  const addLike = (id, blogObject) => {
+    blogService
+      .update(id, blogObject)
+      .then(returnedBlog => {
+        setBlogs(blogs.map(b => b.id === returnedBlog.id ? returnedBlog :  b))
+        printMessage('Blog succesfully updated!')
+      })
+      .catch(error => {
+        printMessage(`${error.response.data.error} `, 'error')
+      })
+  }
+
+
   const blogForm = () => (
     <Togglable buttonLabel='new blog' ref={blogFormRef}>
       <BlogForm createBlog={addBlog} />
@@ -128,7 +142,7 @@ const App = () => {
       <h2>create new</h2>
       {blogForm()}
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} updateLike={addLike} />
       )}
 
     </div>

@@ -43,7 +43,6 @@ blogsRouter.delete('/:id', async (request, response) => {
 
   if ( blog.user.toString() === decodedToken.id.toString() ) {
     const deleteBlog = await Blog.findByIdAndRemove(request.params.id)
-    console.log(deleteBlog)
     response.status(204).json(deleteBlog.toJSON())
   }
 })
@@ -62,8 +61,8 @@ blogsRouter.put('/:id', async (request, response) => {
     if (!update[key]) delete update[key]
   })
 
-  await Blog.findByIdAndUpdate(request.params.id, update)
-  response.status(204).end()
+  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, update, { new: true })
+  response.json(updatedBlog.toJSON())
 })
 
 
