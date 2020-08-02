@@ -17,10 +17,13 @@ const App = () => {
   const blogFormRef = useRef()
 
   useEffect(() => {
+    console.log('run this')
     blogService.getAll().then(blogs =>
       setBlogs(blogs.sort((a, b) =>  b.likes - a.likes))
     )
   }, [])
+
+
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
@@ -109,6 +112,7 @@ const App = () => {
     blogService
       .update(id, blogObject)
       .then(returnedBlog => {
+        console.log(returnedBlog)
         setBlogs(blogs.map(b => b.id === returnedBlog.id ? returnedBlog :  b).sort((a, b) =>  b.likes - a.likes))
         printMessage('Blog succesfully updated!')
       })
@@ -117,6 +121,20 @@ const App = () => {
       })
   }
 
+
+  
+  const deleteBlog = (id) => {
+    const deleted = id
+    blogService
+      .deleteBlog(id)
+      .then(returnedBlog => {
+        setBlogs(blogs.filter(b => b.id !== deleted))
+        printMessage('Blog succesfully deleted!')
+      })
+      .catch(error => {
+        printMessage(`${error.response.data.error} `, 'error')
+      })
+  }
 
   const blogForm = () => (
     <Togglable buttonLabel='new blog' ref={blogFormRef}>
@@ -142,7 +160,7 @@ const App = () => {
       <h2>create new</h2>
       {blogForm()}
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} updateLike={addLike} />
+        <Blog key={blog.id} blog={blog} updateLike={addLike} deleteBlog={deleteBlog} user={user} />
       )}
 
     </div>

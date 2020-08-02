@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 
-const Blog = ({ blog, updateLike }) => {
+const Blog = ({ blog, updateLike, deleteBlog, user }) => {
 
   const [visible, setVisible] = useState(false)
 
   const hideWhenVisible = { display: visible ? 'none' : '' }
   const showWhenVisible = { display: visible ? '' : 'none' }
+  const deleteVisibility = { display: visible ? (user.username === blog.user.username ? '' : 'none') : 'none' }
 
 
   const toggleVisibility = () => {
@@ -21,11 +22,17 @@ const Blog = ({ blog, updateLike }) => {
   }
 
   const addLike = () => {
+    console.log(blog.user.id)
     updateLike(blog.id,
       {
-        likes: blog.likes + 1,
+        likes: blog.likes + 1
       })
   }  
+
+  const delBlog = () => {
+    const result = window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)
+    if(result)    deleteBlog(blog.id)
+  }
 
   return (
     <div style={blogStyle}>
@@ -40,6 +47,7 @@ const Blog = ({ blog, updateLike }) => {
           <div>{blog.url}</div>
           <div>{blog.likes} <button onClick={addLike}>like</button></div>
           <div>{blog.user.username}</div>
+          <button onClick={delBlog} style={deleteVisibility} >remove</button>
         </div>
       </div>
     </div>
