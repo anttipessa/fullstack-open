@@ -17,7 +17,6 @@ const App = () => {
   const blogFormRef = useRef()
 
   useEffect(() => {
-    console.log('run this')
     blogService.getAll().then(blogs =>
       setBlogs(blogs.sort((a, b) =>  b.likes - a.likes))
     )
@@ -112,7 +111,6 @@ const App = () => {
     blogService
       .update(id, blogObject)
       .then(returnedBlog => {
-        console.log(returnedBlog)
         setBlogs(blogs.map(b => b.id === returnedBlog.id ? returnedBlog :  b).sort((a, b) =>  b.likes - a.likes))
         printMessage('Blog succesfully updated!')
       })
