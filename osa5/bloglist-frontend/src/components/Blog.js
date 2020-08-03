@@ -28,7 +28,7 @@ const Blog = ({ blog, updateLike, deleteBlog, user }) => {
       {
         likes: blog.likes + 1
       })
-  }  
+  }
 
   const delBlog = () => {
     const result = window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)
@@ -61,6 +61,5 @@ Blog.propTypes = {
   user: PropTypes.object.isRequired,
   blog: PropTypes.object.isRequired
 }
-
 
 export default Blog

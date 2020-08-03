@@ -62,4 +62,4 @@ BlogForm.propTypes = {
   createBlog: PropTypes.func.isRequired,
 }
 
-export default BlogForm 
+export default BlogForm

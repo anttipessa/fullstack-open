@@ -61,7 +61,7 @@ const App = () => {
     }, 4000)
   }
 
-  const handleLogout = async (event) => {
+  const handleLogout = async () => {
     setUser(null)
     window.localStorage.removeItem(
       'loggedUser'
@@ -120,12 +120,11 @@ const App = () => {
   }
 
 
-  
   const deleteBlog = (id) => {
     const deleted = id
     blogService
       .deleteBlog(id)
-      .then(returnedBlog => {
+      .then( () => {
         setBlogs(blogs.filter(b => b.id !== deleted))
         printMessage('Blog succesfully deleted!')
       })
