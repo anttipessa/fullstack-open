@@ -8,19 +8,21 @@ describe('<Blog />', () => {
   let component
 
   beforeEach(() => {
+
     const blog = {
       title: 'Component testing is done with react-testing-library',
       author: 'Bill Gates',
       url: 'wwww.google.com',
       likes: 100,
       user: {
-        user: 'test'
+        username: 'Test'
       }
     }
 
     const user = {
       username: 'Test'
     }
+
     component = render(
       <Blog blog={blog} user={user} />
     )
@@ -30,5 +32,16 @@ describe('<Blog />', () => {
     expect(component.container).toHaveTextContent(
       'Component testing is done with react-testing-library Bill Gates'
     )
+  })
+
+  test('After clicking show button url and likes visible', () => {
+    const button = component.getByText('show')
+    fireEvent.click(button)
+    const div = component.container.querySelector('.blogContent')
+    expect(div).not.toHaveStyle('display: none')
+    expect(div).toHaveTextContent(
+      'wwww.google.com100 likeTestremove'
+    )
+
   })
 })

@@ -32,7 +32,7 @@ const Blog = ({ blog, updateLike, deleteBlog, user }) => {
 
   const delBlog = () => {
     const result = window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)
-    if(result)    deleteBlog(blog.id)
+    if (result) deleteBlog(blog.id)
   }
 
   return (
@@ -45,10 +45,12 @@ const Blog = ({ blog, updateLike, deleteBlog, user }) => {
         <div style={showWhenVisible}>
           {blog.title} {blog.author}
           <button onClick={toggleVisibility}>hide</button>
-          <div>{blog.url}</div>
-          <div>{blog.likes} <button onClick={addLike}>like</button></div>
-          <div>{blog.user.username}</div>
-          <button onClick={delBlog} style={deleteVisibility} >remove</button>
+          <div className="blogContent">
+            <div>{blog.url}</div>
+            <div>{blog.likes} <button onClick={addLike}>like</button></div>
+            <div>{blog.user.username}</div>
+            <button onClick={delBlog} style={deleteVisibility} >remove</button>
+          </div>
         </div>
       </div>
     </div>
