@@ -6,8 +6,10 @@ import Blog from './Blog'
 
 describe('<Blog />', () => {
   let component
+  let mockHandler
 
   beforeEach(() => {
+    mockHandler = jest.fn()
 
     const blog = {
       title: 'Component testing is done with react-testing-library',
@@ -24,7 +26,7 @@ describe('<Blog />', () => {
     }
 
     component = render(
-      <Blog blog={blog} user={user} />
+      <Blog blog={blog} user={user} updateLike={mockHandler}  deleteBlog={mockHandler}/>
     )
 
   })
@@ -42,6 +44,13 @@ describe('<Blog />', () => {
     expect(div).toHaveTextContent(
       'wwww.google.com100 likeTestremove'
     )
-
   })
+
+  test('After clicking like button twice event handler is called twice', async () => {
+    const button = component.getByText('like')
+    fireEvent.click(button)
+    fireEvent.click(button)
+    expect(mockHandler.mock.calls).toHaveLength(2)
+  })
+
 })
