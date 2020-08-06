@@ -37,7 +37,7 @@ describe('Blog app', function () {
     })
   })
 
-  describe.only('When logged in', function () {
+  describe('When logged in', function () {
     beforeEach(function () {
       cy.login({ username: 'mluukkai', password: 'salainen' })
     })
@@ -66,6 +66,15 @@ describe('Blog app', function () {
       cy.contains('remove').click()
       cy.get('html').should('not.contain', 'first blog')
       cy.get('.success') .should('contain', 'Blog succesfully deleted!')
+    })
+    it('Blogs are sorted by likes', function () {
+      cy.createBlog({ title: 'first blog', author: 'blogger', url: 'www.google.com', likes: 1 })
+      cy.createBlog({ title: 'second blog', author: 'blogger', url: 'www.google.com', likes: 2 })
+      cy.createBlog({ title: 'third blog', author: 'blogger', url: 'www.google.com', likes: 999 })
+      cy.get('.blog').then( blogs => {
+        console.log('number of buttons', blogs.length)
+        cy.wrap(blogs[0]).should('contain','third blog')
+      })
     })
   })
 })
