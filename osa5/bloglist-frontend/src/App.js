@@ -58,7 +58,7 @@ const App = () => {
     setMessage({ message, type })
     setTimeout(() => {
       setMessage(null)
-    }, 4000)
+    }, 5000)
   }
 
   const handleLogout = async () => {
@@ -74,6 +74,7 @@ const App = () => {
       <div>
         username
         <input
+          id='username'
           type="text"
           value={username}
           name="Username"
@@ -83,13 +84,14 @@ const App = () => {
       <div>
         password
         <input
+          id='password'
           type="password"
           value={password}
           name="Password"
           onChange={({ target }) => setPassword(target.value)}
         />
       </div>
-      <button type="submit">login</button>
+      <button id='login-button' type="submit">login</button>
     </form>
   )
 
