@@ -59,5 +59,13 @@ describe('Blog app', function () {
       cy.contains('like').click()
       cy.get('html').should('contain', '1')
     })
+
+    it('A blog can be removed', function () {
+      cy.createBlog({ title: 'first blog', author: 'blogger', url: 'www.google.com' })
+      cy.contains('show').click()
+      cy.contains('remove').click()
+      cy.get('html').should('not.contain', 'first blog')
+      cy.get('.success') .should('contain', 'Blog succesfully deleted!')
+    })
   })
 })
