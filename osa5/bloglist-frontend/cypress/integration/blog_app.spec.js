@@ -52,5 +52,12 @@ describe('Blog app', function () {
       cy.contains('a note created by cypress')
 
     })
+
+    it('A blog can be liked', function () {
+      cy.createBlog({ title: 'first blog', author: 'blogger', url: 'www.google.com' })
+      cy.contains('show').click()
+      cy.contains('like').click()
+      cy.get('html').should('contain', '1')
+    })
   })
 })
