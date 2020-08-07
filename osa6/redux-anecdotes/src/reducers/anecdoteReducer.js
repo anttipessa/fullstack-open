@@ -32,7 +32,7 @@ const reducer = (state = initialState, action) => {
       }
       return state.map(note =>
         note.id !== id ? note : changedDote
-      )
+      ).sort(((a, b) =>  b.votes - a.votes))
     case 'NEW_ANECDOTE':
       return [...state, action.data]
     default:
