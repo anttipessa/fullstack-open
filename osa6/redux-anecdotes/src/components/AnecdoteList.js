@@ -5,19 +5,20 @@ import { setNotification, removeNotification } from '../reducers/notificationRed
 
 const AnecdoteList = () => {
   const anecdotes = useSelector(state => state.anecdotes)
+  const filter = useSelector(state => state.filter)
   const dispatch = useDispatch()
 
   const vote = (id, name) => {
     dispatch(addVote(id))
     dispatch(setNotification(`you voted '${name}'`))
     setTimeout(() => {
-        dispatch(removeNotification())
-      }, 5000)
+      dispatch(removeNotification())
+    }, 5000)
   }
 
   return (
     <div>
-      {anecdotes.map(anecdote =>
+      {anecdotes.filter(a => a.content.toLowerCase().includes(filter.toLowerCase())).map(anecdote =>
         <div key={anecdote.id}>
           <div>
             {anecdote.content}
@@ -29,7 +30,7 @@ const AnecdoteList = () => {
         </div>
       )}
 
-     </div>
+    </div>
   )
 }
 
