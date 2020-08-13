@@ -14,7 +14,6 @@ const createNew = async (content) => {
 }
 
 const update = async (id, newVote) => {
-  console.log(newVote)
   const response = await axios.patch(`${baseUrl}/${id}`, newVote)
   return response.data
 }
