@@ -6,7 +6,7 @@ import {
   useHistory,
   useRouteMatch,
 } from "react-router-dom"
-import  { useField } from './hooks'
+import { useField } from './hooks'
 
 const Menu = () => {
   const padding = {
@@ -68,7 +68,7 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
-  
+
   const content = useField('text')
   const author = useField('text')
   const info = useField('text')
@@ -89,6 +89,13 @@ const CreateNew = (props) => {
     }, 10000)
   }
 
+  const handleReset = (e) => {
+    e.preventDefault()
+    content.reset()
+    author.reset()
+    info.reset()
+  }
+
   return (
     <div>
       <h2>create a new anecdote</h2>
@@ -103,9 +110,10 @@ const CreateNew = (props) => {
         </div>
         <div>
           url for more info
-          <input name='info' {...info}/>
+          <input name='info' {...info} />
         </div>
         <button>create</button>
+        <button onClick={handleReset} >reset</button>
       </form>
     </div>
   )
