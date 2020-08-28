@@ -23,9 +23,9 @@ const Blog = ({ blog, updateLike, deleteBlog, user }) => {
   }
 
   const addLike = () => {
-    console.log(blog.user.id)
     updateLike(blog.id,
       {
+        title: blog.title,
         likes: blog.likes + 1
       })
   }
