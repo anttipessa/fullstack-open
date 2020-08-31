@@ -1,31 +1,20 @@
-import blogService from '../services/blogs'
+import userService from '../services/users'
 
 const userReducer = (state = null, action) => {
   switch (action.type) {
-    case 'GET_USER':
+    case 'INIT_USERS':
       return action.data
-    case 'LOGOUT_USER':
-      return null
     default:
       return state
   }
 }
 
-export const getUser = data => {
+export const getAllUsers = () => {
   return async dispatch => {
-    blogService.setToken(data.token)
+    const users = await userService.getAll()
     dispatch({
-      type: 'GET_USER',
-      data: data
-    })
-  }
-}
-
-export const logOutUser = () => {
-  return dispatch => {
-    dispatch({
-      type: 'LOGOUT_USER',
-      data: null,
+      type: 'INIT_USERS',
+      data: users
     })
   }
 }

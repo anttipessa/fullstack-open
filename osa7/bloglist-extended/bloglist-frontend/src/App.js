@@ -2,32 +2,37 @@ import React, { useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { setNotification } from './reducers/notificationReducer'
 import { initializeBlogs, createBlog, removeBlog, upVote } from './reducers/blogReducer'
-import { getUser, logOutUser } from './reducers/userReducer'
+import { getUser, logOutUser } from './reducers/loginReducer'
+import { getAllUsers } from './reducers/userReducer'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
+import UserList from './components/UserList'
+import { Switch, Route } from 'react-router-dom'
 import './App.css'
 
 const App = () => {
 
   const dispatch = useDispatch()
   const blogs = useSelector(state => state.blog)
-  const user = useSelector(state => state.user)
-  console.log(user)
+  const user = useSelector(state => state.login)
+  const users = useSelector(state => state.users)
 
   const blogFormRef = useRef()
 
   useEffect(() => {
     dispatch(initializeBlogs())
+    dispatch(getAllUsers())
   }, [dispatch])
 
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
     if (loggedUserJSON) {
-      dispatch(getUser(loggedUserJSON))
+      dispatch(getUser(JSON.parse(loggedUserJSON)
+      ))
     }
   }, [dispatch])
 
@@ -86,12 +91,18 @@ const App = () => {
       <Notification />
       <h2>blogs</h2>
       <p> {user.username} logged in <button onClick={handleLogout}>logout</button></p>
-      <h2>create new</h2>
-      {blogForm()}
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} updateLike={addLike} deleteBlog={deleteBlog} user={user} />
-      ).sort(((a, b) => b.votes - a.votes))}
-
+      <Switch>
+        <Route path='/users'>
+          <UserList users={users} />
+        </Route>
+        <Route path='/'>
+          <h2>create new</h2>
+          {blogForm()}
+          {blogs.map(blog =>
+            <Blog key={blog.id} blog={blog} updateLike={addLike} deleteBlog={deleteBlog} user={user} />
+          ).sort(((a, b) => b.votes - a.votes))}
+        </Route>
+      </Switch>
     </div>
   )
 }
