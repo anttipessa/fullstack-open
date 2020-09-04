@@ -1,26 +1,13 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 
 const Blog = ({ blog, updateLike, deleteBlog, user }) => {
 
-  const [visible, setVisible] = useState(false)
-
-  const hideWhenVisible = { display: visible ? 'none' : '' }
-  const showWhenVisible = { display: visible ? '' : 'none' }
-  const deleteVisibility = { display: visible ? (user.username === blog.user.username ? '' : 'none') : 'none' }
-
-
-  const toggleVisibility = () => {
-    setVisible(!visible)
+  if (!blog) {
+    return null
   }
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
-  }
+  const deleteVisibility = { display: true ? (user.username === blog.user.username ? '' : 'none') : 'none' }
 
   const addLike = () => {
     updateLike(blog.id,
@@ -36,23 +23,12 @@ const Blog = ({ blog, updateLike, deleteBlog, user }) => {
   }
 
   return (
-    <div style={blogStyle} className='blog'>
-      <div>
-        <div style={hideWhenVisible}>
-          {blog.title} {blog.author}
-          <button onClick={toggleVisibility}>show</button>
-        </div>
-        <div style={showWhenVisible}>
-          {blog.title} {blog.author}
-          <button onClick={toggleVisibility}>hide</button>
-          <div className="blogContent">
-            <div>{blog.url}</div>
-            <div>{blog.likes} <button onClick={addLike}>like</button></div>
-            <div>{blog.user.username}</div>
-            <button onClick={delBlog} style={deleteVisibility} >remove</button>
-          </div>
-        </div>
-      </div>
+    <div >
+      <h1>{blog.title} {blog.author}</h1>
+      <a href={blog.url}>{blog.url}</a>
+      <div>{blog.likes} <button onClick={addLike}>like</button></div>
+      <div>added by {blog.user.name}</div>
+      <button onClick={delBlog} style={deleteVisibility} >remove</button>
     </div>
   )
 }

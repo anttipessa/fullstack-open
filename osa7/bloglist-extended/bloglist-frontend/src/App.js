@@ -11,7 +11,7 @@ import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
 import UserList from './components/UserList'
 import User from './components/User'
-import { Switch, Route, useRouteMatch } from 'react-router-dom'
+import { Switch, Route, useRouteMatch, Link } from 'react-router-dom'
 import './App.css'
 
 const App = () => {
@@ -21,11 +21,24 @@ const App = () => {
   const user = useSelector(state => state.login)
   const users = useSelector(state => state.users)
   const match = useRouteMatch('/users/:id')
+  const blogMatch = useRouteMatch('/blogs/:id')
   const target = match 
     ? users.find(u => u.id === match.params.id)
     : null
+  const targetBlog = blogMatch 
+    ? blogs.find(b => b.id === blogMatch.params.id)
+    : null  
 
   const blogFormRef = useRef()
+
+  const blogStyle = {
+    paddingTop: 10,
+    paddingLeft: 2,
+    border: 'solid',
+    borderWidth: 1,
+    marginBottom: 5
+  }
+
 
   useEffect(() => {
     dispatch(initializeBlogs())
@@ -49,8 +62,6 @@ const App = () => {
     window.localStorage.removeItem('loggedUser')
     dispatch(logOutUser())
   }
-
-
 
   const addBlog = (blogObject) => {
     blogFormRef.current.toggleVisibility()
@@ -102,6 +113,9 @@ const App = () => {
       <Route path="/users/:id">
           <User user={target} />
         </Route>
+        <Route path="/blogs/:id">
+        <Blog blog={targetBlog}  updateLike={addLike} deleteBlog={deleteBlog} user={user} /> 
+        </Route>
         <Route path='/users'>
           <UserList users={users}/>
         </Route>
@@ -109,7 +123,7 @@ const App = () => {
           <h2>create new</h2>
           {blogForm()}
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} updateLike={addLike} deleteBlog={deleteBlog} user={user} />
+            <Link  to={`/blogs/${blog.id}`}><div style={blogStyle}>{blog.title}</div></Link>
           ).sort(((a, b) => b.votes - a.votes))}
         </Route>
       </Switch>
