@@ -10,7 +10,8 @@ import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
 import UserList from './components/UserList'
-import { Switch, Route } from 'react-router-dom'
+import User from './components/User'
+import { Switch, Route, useRouteMatch } from 'react-router-dom'
 import './App.css'
 
 const App = () => {
@@ -19,6 +20,10 @@ const App = () => {
   const blogs = useSelector(state => state.blog)
   const user = useSelector(state => state.login)
   const users = useSelector(state => state.users)
+  const match = useRouteMatch('/users/:id')
+  const target = match 
+    ? users.find(u => u.id === match.params.id)
+    : null
 
   const blogFormRef = useRef()
 
@@ -44,6 +49,8 @@ const App = () => {
     window.localStorage.removeItem('loggedUser')
     dispatch(logOutUser())
   }
+
+
 
   const addBlog = (blogObject) => {
     blogFormRef.current.toggleVisibility()
@@ -92,8 +99,11 @@ const App = () => {
       <h2>blogs</h2>
       <p> {user.username} logged in <button onClick={handleLogout}>logout</button></p>
       <Switch>
+      <Route path="/users/:id">
+          <User user={target} />
+        </Route>
         <Route path='/users'>
-          <UserList users={users} />
+          <UserList users={users}/>
         </Route>
         <Route path='/'>
           <h2>create new</h2>

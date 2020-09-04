@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 const UserList = ({ users }) => {
 
@@ -8,10 +9,12 @@ const UserList = ({ users }) => {
 
   return (
     <div>
-      <h2><b>users</b></h2>
+      <h2><b>Users</b></h2>
       <div> <b>blogs created</b></div>
       {users.map(user =>
-        <div>{user.username} {user.blogs.length}</div>)}
+        <div key={user.id} >
+          <Link to={`/users/${user.id}`}> {user.username}</Link> {user.blogs.length}
+        </div>)}
     </div>
   )
 }

@@ -12,6 +12,11 @@ const getAll = () => {
   return request.then(response => response.data)
 }
 
+const getUser = (id) => {
+  const request = axios.get(`${baseUrl}/${id}`)
+  return request.then(response => response.data)
+}
+
 const create = async newObject => {
   const config = {
     headers: { Authorization: token },
@@ -33,4 +38,4 @@ const deleteUser = async (id) => {
   return response.data
 }
 
-export default { getAll, create, update, deleteUser, setToken }
+export default { getAll, getUser, create, update, deleteUser, setToken }
