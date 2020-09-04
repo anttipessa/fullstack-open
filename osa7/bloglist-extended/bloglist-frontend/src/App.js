@@ -11,8 +11,10 @@ import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
 import UserList from './components/UserList'
 import User from './components/User'
+import NavMenu from './components/NavMenu'
 import { Switch, Route, useRouteMatch, Link } from 'react-router-dom'
 import './App.css'
+
 
 const App = () => {
 
@@ -22,12 +24,12 @@ const App = () => {
   const users = useSelector(state => state.users)
   const match = useRouteMatch('/users/:id')
   const blogMatch = useRouteMatch('/blogs/:id')
-  const target = match 
+  const target = match
     ? users.find(u => u.id === match.params.id)
     : null
-  const targetBlog = blogMatch 
+  const targetBlog = blogMatch
     ? blogs.find(b => b.id === blogMatch.params.id)
-    : null  
+    : null
 
   const blogFormRef = useRef()
 
@@ -106,24 +108,24 @@ const App = () => {
 
   return (
     <div>
+      <NavMenu user={user} handleLogout={handleLogout} />
       <Notification />
       <h2>blogs</h2>
-      <p> {user.username} logged in <button onClick={handleLogout}>logout</button></p>
       <Switch>
-      <Route path="/users/:id">
+        <Route path="/users/:id">
           <User user={target} />
         </Route>
         <Route path="/blogs/:id">
-        <Blog blog={targetBlog}  updateLike={addLike} deleteBlog={deleteBlog} user={user} /> 
+          <Blog blog={targetBlog} updateLike={addLike} deleteBlog={deleteBlog} user={user} />
         </Route>
         <Route path='/users'>
-          <UserList users={users}/>
+          <UserList users={users} />
         </Route>
         <Route path='/'>
           <h2>create new</h2>
           {blogForm()}
           {blogs.map(blog =>
-            <Link  to={`/blogs/${blog.id}`}><div style={blogStyle}>{blog.title}</div></Link>
+            <Link to={`/blogs/${blog.id}`}><div style={blogStyle}>{blog.title} {blog.author}</div></Link>
           ).sort(((a, b) => b.votes - a.votes))}
         </Route>
       </Switch>
