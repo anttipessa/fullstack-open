@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import { TextField, Button, List, ListItem, Card } from '@material-ui/core'
 
 const Blog = ({ blog, updateLike, deleteBlog, user, giveComment }) => {
   const [comment, setComment] = useState('')
-    
+
   if (!blog) {
     return null
   }
@@ -29,23 +30,26 @@ const Blog = ({ blog, updateLike, deleteBlog, user, giveComment }) => {
 
   const addComment = (event) => {
     event.preventDefault()
-    giveComment(blog.id, {text: comment})
+    giveComment(blog.id, { text: comment })
     setComment('')
   }
 
   return (
     <div >
+      <Card variant="outlined">
       <h1>{blog.title} {blog.author}</h1>
       <a href={blog.url}>{blog.url}</a>
-      <div>{blog.likes} <button onClick={addLike}>like</button></div>
+      <div>{blog.likes} <Button onClick={addLike} variant="contained" color="primary" size="small">like</Button></div>
       <div>added by {blog.user.name}</div>
-      <button onClick={delBlog} style={deleteVisibility} >remove</button>
-
+      <Button onClick={delBlog} variant="contained" color="secondary" size="small" style={deleteVisibility} >remove</Button>
+      </Card>
       <h3>comments</h3>
-      <input value={comment} onChange={handleCommentChange}/>
-      <button onClick={addComment}>add comment</button>
+      <TextField value={comment} onChange={handleCommentChange} />
+      <Button onClick={addComment} variant="contained" color="primary">add comment</Button>
       {blog.comments.map(c =>
-        <li key={c.id}>{c.text}</li>)}
+        <List>
+          <ListItem divider button key={c.id}>{c.text}</ListItem>
+        </List>)}
     </div>
   )
 }
@@ -53,8 +57,7 @@ const Blog = ({ blog, updateLike, deleteBlog, user, giveComment }) => {
 Blog.propTypes = {
   updateLike: PropTypes.func.isRequired,
   deleteBlog: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired,
-  blog: PropTypes.object.isRequired
+  user: PropTypes.object.isRequired
 }
 
 export default Blog

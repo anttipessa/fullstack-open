@@ -1,21 +1,23 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-const NavMenu = ({user, handleLogout}) => {
-    const padding = {
-      paddingRight: 5,
-     
-    }
+import { AppBar, Toolbar, Button } from '@material-ui/core'
 
-    const colour = {
-        backgroundColor: "#669999"
-    }
-    return (
-      <div style={colour}>
-        <Link href='#' style={padding} to="/">blogs</Link>
-        <Link href='#' style={padding} to="/users">users</Link>
-        {user.username} logged in <button onClick={handleLogout}>logout</button>
-      </div>
-    )
+const NavMenu = ({ user, handleLogout }) => {
+
+  return (
+    <AppBar position="static">
+      <Toolbar>
+        <Button color="inherit" component={Link} to="/">
+          blogs
+        </Button>
+        <Button color="inherit" component={Link} to="/users">
+          users
+        </Button>
+        <Button color="inherit" onClick={handleLogout}>logout</Button>
+        <em>{user.username} logged in</em>
+      </Toolbar>
+    </AppBar>
+  )
 }
 
 export default NavMenu

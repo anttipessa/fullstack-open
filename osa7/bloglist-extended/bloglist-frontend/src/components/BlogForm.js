@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import { TextField, Button } from '@material-ui/core'
 
 const BlogForm = ({ createBlog }) => {
 
@@ -35,27 +36,27 @@ const BlogForm = ({ createBlog }) => {
   return (
     <form onSubmit={addBlog}>
       <div>title:
-        <input
+        <TextField
           id='title'
           value={title}
           onChange={handleTitleChange}
         />
       </div>
       <div>author:
-        <input
+        <TextField
           id='author'
           value={author}
           onChange={handleAuthorChange}
         />
       </div>
       <div>url:
-        <input
+        <TextField
           id='url'
           value={url}
           onChange={handleUrlChange}
         />
       </div>
-      <button type="submit">save</button>
+      <Button type="submit" variant="contained" color="primary">save</Button>
     </form>
 
   )

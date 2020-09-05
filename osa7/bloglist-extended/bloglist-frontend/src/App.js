@@ -14,6 +14,7 @@ import User from './components/User'
 import NavMenu from './components/NavMenu'
 import { Switch, Route, useRouteMatch, Link } from 'react-router-dom'
 import './App.css'
+import { Container, Table, TableBody, TableCell, TableContainer, TableRow, Paper } from '@material-ui/core'
 
 
 const App = () => {
@@ -32,15 +33,6 @@ const App = () => {
     : null
 
   const blogFormRef = useRef()
-
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
-  }
-
 
   useEffect(() => {
     dispatch(initializeBlogs())
@@ -74,7 +66,7 @@ const App = () => {
     })
   }
 
-  const giveComment = (id, commentObject)=> {
+  const giveComment = (id, commentObject) => {
     dispatch(createComment(id, commentObject)).then(() => {
       printMessage('Blog succesfully commented!')
     }).catch(error => {
@@ -115,10 +107,10 @@ const App = () => {
   }
 
   return (
-    <div>
+    <Container>
       <NavMenu user={user} handleLogout={handleLogout} />
       <Notification />
-      <h2>blogs</h2>
+      <h2>blog app</h2>
       <Switch>
         <Route path="/users/:id">
           <User user={target} />
@@ -132,12 +124,23 @@ const App = () => {
         <Route path='/'>
           <h2>create new</h2>
           {blogForm()}
-          {blogs.map(blog =>
-            <Link to={`/blogs/${blog.id}`} key={blog.id}><div style={blogStyle}>{blog.title} {blog.author}</div></Link>
-          ).sort(((a, b) => b.votes - a.votes))}
+          <TableContainer component={Paper}>
+            <Table>
+              <TableBody>
+                {blogs.map(blog =>
+                  <TableRow key={blog.id}>
+                    <TableCell>
+                      <Link to={`/blogs/${blog.id}`} >{blog.title} </Link>
+                    </TableCell>
+                    <TableCell>{blog.author}</TableCell>
+                  </TableRow>
+                ).sort(((a, b) => b.votes - a.votes))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </Route>
       </Switch>
-    </div>
+    </Container>
   )
 }
 
