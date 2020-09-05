@@ -29,6 +29,10 @@ const Blog = ({ blog, updateLike, deleteBlog, user }) => {
       <div>{blog.likes} <button onClick={addLike}>like</button></div>
       <div>added by {blog.user.name}</div>
       <button onClick={delBlog} style={deleteVisibility} >remove</button>
+
+      <h3>comments</h3>
+      {blog.comments.map(c =>
+        <li>{c.text}</li>)}
     </div>
   )
 }
