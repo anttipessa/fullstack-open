@@ -74,7 +74,7 @@ blogsRouter.put('/:id', async (request, response) => {
     if (!update[key]) delete update[key]
   })
 
-  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, update, { new: true }).populate('user')
+  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, update, { new: true }).populate('user').populate('comments', { text: 1})
   console.log(updatedBlog)
   response.json(updatedBlog.toJSON())
 })

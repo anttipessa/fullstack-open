@@ -10,9 +10,14 @@ const blogReducer = (state = [], action) => {
         return state.filter(blog => blog.id !== action.data)
     case 'VOTE':
       const changedBlog = action.data
-      return state.map(anec =>
-        anec.id !== changedBlog.id ? anec : changedBlog
+      console.log(action.data)
+      return state.map(b =>
+        b.id !== changedBlog.id ? b : changedBlog
       ).sort(((a, b) => b.likes - a.likes))
+    case 'COMMENT_BLOG':
+      const commentBlog = state.find(b => b.id === action.id)
+      commentBlog.comments = commentBlog.comments.concat(action.data)
+      return state.map(b => b.id !== action.id ? b : commentBlog)
     default:
       return state
   }
@@ -54,6 +59,17 @@ export const createBlog = data => {
       dispatch({
         type: 'VOTE',
         data:  updatedBlog
+      })
+    }
+  }
+
+  export const createComment = (id, obj) => {
+    return async dispatch => {
+      await blogService.postComment(id, obj)
+      dispatch({
+        type: 'COMMENT_BLOG',
+        data:  obj,
+        id: id
       })
     }
   }

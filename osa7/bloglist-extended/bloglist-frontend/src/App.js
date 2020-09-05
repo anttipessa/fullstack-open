@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { setNotification } from './reducers/notificationReducer'
-import { initializeBlogs, createBlog, removeBlog, upVote } from './reducers/blogReducer'
+import { initializeBlogs, createBlog, removeBlog, upVote, createComment } from './reducers/blogReducer'
 import { getUser, logOutUser } from './reducers/loginReducer'
 import { getAllUsers } from './reducers/userReducer'
 import Blog from './components/Blog'
@@ -74,6 +74,14 @@ const App = () => {
     })
   }
 
+  const giveComment = (id, commentObject)=> {
+    dispatch(createComment(id, commentObject)).then(() => {
+      printMessage('Blog succesfully commented!')
+    }).catch(error => {
+      printMessage(`${error.response.data.error} `, 'error')
+    })
+  }
+
   const addLike = (id, blogObject) => {
     dispatch(upVote(id, blogObject)).then(() => {
       printMessage(`You voted for ${blogObject.title}`)
@@ -116,7 +124,7 @@ const App = () => {
           <User user={target} />
         </Route>
         <Route path="/blogs/:id">
-          <Blog blog={targetBlog} updateLike={addLike} deleteBlog={deleteBlog} user={user} />
+          <Blog blog={targetBlog} updateLike={addLike} deleteBlog={deleteBlog} user={user} giveComment={giveComment} />
         </Route>
         <Route path='/users'>
           <UserList users={users} />
@@ -125,7 +133,7 @@ const App = () => {
           <h2>create new</h2>
           {blogForm()}
           {blogs.map(blog =>
-            <Link to={`/blogs/${blog.id}`}><div style={blogStyle}>{blog.title} {blog.author}</div></Link>
+            <Link to={`/blogs/${blog.id}`} key={blog.id}><div style={blogStyle}>{blog.title} {blog.author}</div></Link>
           ).sort(((a, b) => b.votes - a.votes))}
         </Route>
       </Switch>

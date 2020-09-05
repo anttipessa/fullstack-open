@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
-const Blog = ({ blog, updateLike, deleteBlog, user }) => {
-
+const Blog = ({ blog, updateLike, deleteBlog, user, giveComment }) => {
+  const [comment, setComment] = useState('')
+    
   if (!blog) {
     return null
   }
@@ -22,6 +23,16 @@ const Blog = ({ blog, updateLike, deleteBlog, user }) => {
     if (result) deleteBlog(blog.id)
   }
 
+  const handleCommentChange = (event) => {
+    setComment(event.target.value)
+  }
+
+  const addComment = (event) => {
+    event.preventDefault()
+    giveComment(blog.id, {text: comment})
+    setComment('')
+  }
+
   return (
     <div >
       <h1>{blog.title} {blog.author}</h1>
@@ -31,8 +42,10 @@ const Blog = ({ blog, updateLike, deleteBlog, user }) => {
       <button onClick={delBlog} style={deleteVisibility} >remove</button>
 
       <h3>comments</h3>
+      <input value={comment} onChange={handleCommentChange}/>
+      <button onClick={addComment}>add comment</button>
       {blog.comments.map(c =>
-        <li>{c.text}</li>)}
+        <li key={c.id}>{c.text}</li>)}
     </div>
   )
 }
