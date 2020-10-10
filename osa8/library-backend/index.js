@@ -82,7 +82,7 @@ const resolvers = {
     authorCount: () => Author.collection.countDocuments(),
     allBooks: async (root, args) => {
       let filtered = await Book.find({}).populate('author', { name: 1 })
-      if (!args.author && !args.genre) return Book.find({})
+      if (!args.author && !args.genre) return Book.find({}).populate('author', { name: 1 })
       if (args.genre) filtered = filtered.filter(b => b.genres.includes(args.genre))
       if (args.author) filtered = filtered.filter(c => c.author.name === args.author)
       return filtered
@@ -90,7 +90,7 @@ const resolvers = {
     allAuthors: () => Author.find({}),
     me: (root, args, context) => {
       return context.currentUser
-    }  
+    }
   },
   Author: {
     bookCount: async (root) => {
@@ -129,7 +129,8 @@ const resolvers = {
         throw new AuthenticationError("not authenticated")
       }
       const author = await Author.findOne({ name: args.name })
-      author.born = args.setBornTo
+      if (!author) return null
+      author.born = args.setBornTonp
       try {
         await author.save()
       } catch (error) {
@@ -141,26 +142,26 @@ const resolvers = {
     },
     createUser: (root, args) => {
       const user = new User({ ...args })
-  
+
       return user.save()
         .catch(error => {
           throw new UserInputError(error.message, {
             invalidArgs: args,
           })
         })
-    }, 
+    },
     login: async (root, args) => {
       const user = await User.findOne({ username: args.username })
-  
-      if ( !user || args.password !== 'secret' ) {
+
+      if (!user || args.password !== 'secret') {
         throw new UserInputError("wrong credentials")
       }
-  
+
       const userForToken = {
         username: user.username,
         id: user._id,
       }
-  
+
       return { value: jwt.sign(userForToken, JWT_SECRET) }
     }
   }
@@ -181,7 +182,7 @@ const server = new ApolloServer({
         .findById(decodedToken.id)
       return { currentUser }
     }
-  }  
+  }
 })
 
 server.listen().then(({ url }) => {
