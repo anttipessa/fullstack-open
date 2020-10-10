@@ -130,7 +130,7 @@ const resolvers = {
       }
       const author = await Author.findOne({ name: args.name })
       if (!author) return null
-      author.born = args.setBornTonp
+      author.born = args.setBornTo
       try {
         await author.save()
       } catch (error) {
