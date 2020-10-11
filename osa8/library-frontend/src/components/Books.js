@@ -1,20 +1,28 @@
 import React, { useState, useEffect } from 'react'
+import { ALL_BOOKS_GENRE } from '../queries'
+import { useLazyQuery } from '@apollo/client'
 
 const Books = (props) => {
 
   const [books, setBooks] = useState(props.books)
   const [select, setSelect] = useState('all genres')
   const genres = books.map(g => g.genres).reduce((a, b) => a.concat(b), []).filter((x, i, a) => a.indexOf(x) === i)
+  const [getGenre, result] = useLazyQuery(ALL_BOOKS_GENRE,{
+    fetchPolicy: 'network-only'
+  })
+  
+ 
+  const showGenre = (name) => {
+    setSelect(name)
+    getGenre({ variables: { genre: name } ,fetchPolicy: 'network-only',})
+  }
 
   useEffect(() => {
-    setBooks(props.books)
-  }, [props.books])
-
-  const submit = (g) => {
-    const filter = props.books.filter(b => b.genres.includes(g))
-    setSelect(g)
-    setBooks(filter)
-  }
+    if (result.data) {
+      console.log(result.data.allBooks)
+      setBooks(result.data.allBooks)
+    }
+  }, [result.data])
 
   const reset = () => {
     setSelect('all genres')
@@ -50,7 +58,7 @@ const Books = (props) => {
         </tbody>
       </table>
       {genres.map((g, i) =>
-        < button key={i} onClick={() => submit(g)}> {g}</button>
+        < button key={i} onClick={() => showGenre(g)}> {g}</button>
       )}
       <button onClick={() => reset()}>all genres</button>
     </div >

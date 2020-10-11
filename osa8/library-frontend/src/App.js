@@ -26,8 +26,9 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   const authors = useQuery(ALL_AUTHORS)
   const books = useQuery(ALL_BOOKS)
-  const user = useQuery(USER_INFO)
+  const user  = useQuery(USER_INFO)
   const client = useApolloClient()
+ 
 
   useEffect(() => {
     const token = localStorage.getItem('user-token')
@@ -36,7 +37,7 @@ const App = () => {
     }
   }, [])
 
-  if (authors.loading || books.loading) {
+  if (authors.loading || books.loading || user.loading) {
     return <div>loading...</div>
   }
 
@@ -110,7 +111,7 @@ const App = () => {
 
       <Recommendations
         show={page === 'recommend'}
-        user={user.data.me}
+        genre={user.data.me ? user.data.me.favoriteGenre : ''}
         books={books.data.allBooks}
       />
     </div>
