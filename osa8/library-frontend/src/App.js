@@ -5,8 +5,8 @@ import Books from './components/Books'
 import NewBook from './components/NewBook'
 import LoginForm from './components/LoginForm'
 import Recommendations from './components/Recommendations'
-import { useQuery, useApolloClient } from '@apollo/client'
-import { ALL_AUTHORS, ALL_BOOKS, USER_INFO } from './queries'
+import { useQuery, useApolloClient, useSubscription } from '@apollo/client'
+import { ALL_AUTHORS, ALL_BOOKS, USER_INFO, BOOK_ADDED } from './queries'
 
 const Notify = ({ errorMessage }) => {
   if (!errorMessage) {
@@ -37,9 +37,6 @@ const App = () => {
     }
   }, [])
 
-  if (authors.loading || books.loading || user.loading) {
-    return <div>loading...</div>
-  }
 
 
   const logout = () => {
@@ -53,6 +50,33 @@ const App = () => {
     setTimeout(() => {
       setErrorMessage(null)
     }, 5000)
+  }
+
+  // const updateCacheWith = (addedBook) => {
+  //   const includedIn = (set, object) => 
+  //   set.map(p => p.id).includes(object.id)
+  //   const dataInStore = client.readQuery({ query: ALL_BOOKS })
+  //   console.log(dataInStore.allBooks[0])
+  //   console.log( addedBook)
+  //   if (!includedIn(dataInStore.allBooks, addedBook)) {
+  //     dataInStore.allBooks.push(addedBook)
+  //     client.writeQuery({
+  //       query: ALL_BOOKS,
+  //       data: { allBooks : dataInStore.allBooks.concat(addedBook) }
+  //     })
+  //   }
+  // }
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      const addedBook = subscriptionData.data.bookAdded
+      console.log(addedBook)
+      notify(`${addedBook.title} added`)
+    }
+  })
+
+  if (authors.loading || books.loading || user.loading) {
+    return <div>loading...</div>
   }
 
   // Not logged in view

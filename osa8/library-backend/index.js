@@ -57,7 +57,7 @@ type Book {
   type Mutation {
     addBook(
       title: String!
-      author: String
+      author: String!
       published: Int!
       genres: [String!]!
     ): Book
@@ -128,7 +128,9 @@ const resolvers = {
           invalidArgs: args,
         })
       }
-      pubsub.publish('BOOK_ADDED', { bookAdded: book })
+      const subbook = await Book.findOne({ title: args.title }).populate('author', { name: 1 })
+      console.log(subbook)
+      pubsub.publish('BOOK_ADDED', { bookAdded: subbook })
       return book
     },
     editAuthor: async (root, args, context) => {
@@ -172,7 +174,7 @@ const resolvers = {
       return { value: jwt.sign(userForToken, JWT_SECRET) }
     }
   },
-    Subscription: {
+  Subscription: {
     bookAdded: {
       subscribe: () => pubsub.asyncIterator(['BOOK_ADDED'])
     },
