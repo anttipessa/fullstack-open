@@ -1,11 +1,26 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 
 const Books = (props) => {
+
+  const [books, setBooks] = useState(props.books)
+  const genres = books.map(g => g.genres).reduce((a, b) => a.concat(b), []).filter((x, i, a) => a.indexOf(x) === i)
+
+  useEffect(() => {
+    setBooks(props.books)
+  }, [props.books]) 
+
+  const submit = (g) => {
+    const filter = props.books.filter(b => b.genres.includes(g))
+    setBooks(filter)
+  }
+
+  const reset = () => {
+    setBooks(props.books)
+  }
+
   if (!props.show) {
     return null
   }
-
-  const books = props.books
 
   return (
     <div>
@@ -31,7 +46,11 @@ const Books = (props) => {
           )}
         </tbody>
       </table>
-    </div>
+      {genres.map((g, i) =>
+        < button key={i} onClick={() => submit(g)}> {g}</button>
+      )}
+      <button onClick={() => reset()}>all genres</button>
+    </div >
   )
 }
 
