@@ -54,3 +54,11 @@ export const UPDATE_AUTHOR = gql`
     }
   }
   `
+  export const USER_INFO = gql`
+  query {
+    me {
+      username
+      favoriteGenre
+    }
+  }
+  `

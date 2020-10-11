@@ -142,7 +142,7 @@ const resolvers = {
     },
     createUser: (root, args) => {
       const user = new User({ ...args })
-
+      console.log(user)
       return user.save()
         .catch(error => {
           throw new UserInputError(error.message, {

@@ -3,18 +3,21 @@ import React, { useState, useEffect } from 'react'
 const Books = (props) => {
 
   const [books, setBooks] = useState(props.books)
+  const [select, setSelect] = useState('all genres')
   const genres = books.map(g => g.genres).reduce((a, b) => a.concat(b), []).filter((x, i, a) => a.indexOf(x) === i)
 
   useEffect(() => {
     setBooks(props.books)
-  }, [props.books]) 
+  }, [props.books])
 
   const submit = (g) => {
     const filter = props.books.filter(b => b.genres.includes(g))
+    setSelect(g)
     setBooks(filter)
   }
 
   const reset = () => {
+    setSelect('all genres')
     setBooks(props.books)
   }
 
@@ -25,7 +28,7 @@ const Books = (props) => {
   return (
     <div>
       <h2>books</h2>
-
+      <p>in genre <b>{select}</b></p>
       <table>
         <tbody>
           <tr>
