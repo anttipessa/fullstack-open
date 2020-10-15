@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react'
 import Authors from './components/Authors'
 import Books from './components/Books'
@@ -28,7 +27,6 @@ const App = () => {
   const books = useQuery(ALL_BOOKS)
   const user  = useQuery(USER_INFO)
   const client = useApolloClient()
- 
 
   useEffect(() => {
     const token = localStorage.getItem('user-token')
@@ -36,8 +34,6 @@ const App = () => {
       setToken(token)
     }
   }, [])
-
-
 
   const logout = () => {
     setToken(null)
@@ -52,26 +48,23 @@ const App = () => {
     }, 5000)
   }
 
-  // const updateCacheWith = (addedBook) => {
-  //   const includedIn = (set, object) => 
-  //   set.map(p => p.id).includes(object.id)
-  //   const dataInStore = client.readQuery({ query: ALL_BOOKS })
-  //   console.log(dataInStore.allBooks[0])
-  //   console.log( addedBook)
-  //   if (!includedIn(dataInStore.allBooks, addedBook)) {
-  //     dataInStore.allBooks.push(addedBook)
-  //     client.writeQuery({
-  //       query: ALL_BOOKS,
-  //       data: { allBooks : dataInStore.allBooks.concat(addedBook) }
-  //     })
-  //   }
-  // }
+  const updateCacheWith = (addedBook) => {
+    const includedIn = (set, object) =>
+      set.map(p => p.title).includes(object.title)
+    const dataInStore = client.readQuery({ query: ALL_BOOKS })
+    if (!includedIn(dataInStore.allBooks, addedBook)) {
+      client.writeQuery({
+        query: ALL_BOOKS,
+        data: { allBooks: dataInStore.allBooks.concat(addedBook) }
+      })
+    }
+  }
 
   useSubscription(BOOK_ADDED, {
     onSubscriptionData: ({ subscriptionData }) => {
       const addedBook = subscriptionData.data.bookAdded
-      console.log(addedBook)
       notify(`${addedBook.title} added`)
+      updateCacheWith(addedBook)
     }
   })
 
@@ -131,12 +124,12 @@ const App = () => {
       <NewBook
         show={page === 'add'}
         setError={notify}
+        updateCacheWith={updateCacheWith}
       />
 
       <Recommendations
         show={page === 'recommend'}
         genre={user.data.me ? user.data.me.favoriteGenre : ''}
-        books={books.data.allBooks}
       />
     </div>
   )

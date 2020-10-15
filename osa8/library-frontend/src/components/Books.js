@@ -8,21 +8,25 @@ const Books = (props) => {
   const [select, setSelect] = useState('all genres')
   const genres = books.map(g => g.genres).reduce((a, b) => a.concat(b), []).filter((x, i, a) => a.indexOf(x) === i)
   const [getGenre, result] = useLazyQuery(ALL_BOOKS_GENRE,{
-    fetchPolicy: 'network-only'
+    fetchPolicy: 'cache-and-network'
   })
   
- 
   const showGenre = (name) => {
     setSelect(name)
-    getGenre({ variables: { genre: name } ,fetchPolicy: 'network-only',})
+    getGenre({ variables: { genre: name } ,fetchPolicy: 'cache-and-network',})
   }
 
   useEffect(() => {
     if (result.data) {
-      console.log(result.data.allBooks)
       setBooks(result.data.allBooks)
     }
   }, [result.data])
+
+  useEffect(() => {
+    if (props.books) {
+      setBooks(props.books)
+    }
+  }, [props.books])
 
   const reset = () => {
     setSelect('all genres')

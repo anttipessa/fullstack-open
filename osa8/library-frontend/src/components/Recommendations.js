@@ -4,16 +4,21 @@ import { useLazyQuery } from '@apollo/client'
 
 const Recommendations = (props) => {
 
-  const [books, setBooks] = useState(props.books)
-  const [getGenre, result] = useLazyQuery(ALL_BOOKS_GENRE)
+  const [books, setBooks] = useState()
+  const [getGenre, result] = useLazyQuery(ALL_BOOKS_GENRE,{
+    fetchPolicy: 'network-only' 
+  })
   const genre = props.genre
 
   useEffect(() => {
-    getGenre({ variables: { genre: genre }, fetchPolicy: 'network-only' })
-    if (result.data) {
+      getGenre({ variables: { genre: genre }, fetchPolicy: 'network-only' })
+  }, [genre, getGenre])
+
+  useEffect(() => {
+    if(result.data){
       setBooks(result.data.allBooks)
-    }  // eslint-disable-next-line
-  }, [result.data, props.books])
+    }
+}, [result.data])
 
   if (!props.show || !props.genre) {
     return null
