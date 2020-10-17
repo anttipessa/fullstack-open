@@ -38,4 +38,30 @@ const calculateExercises = (a: Array<number>, target: number): Results => {
     return result;
 }
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1] , 2));
+interface exeValues {
+    value1: Array<number>;
+    value2: number;
+}
+
+const parseArgumentsAgain = (args: Array<string>): exeValues => {
+    const days = args.filter(a => (a.match(/^\d+\.\d+$|^\d+$/) != null)).map(a => Number(a))
+    days.shift()
+    if (!isNaN(Number(args[2])) && !isNaN(Number(args[3]))) {
+        return {
+            value1: days,
+            value2: Number(args[2])
+        }
+
+    } else {
+        throw new Error('Provided values were not numbers!');
+    }
+}
+
+
+try {
+    const { value1, value2 } = parseArgumentsAgain(process.argv);
+    console.log(calculateExercises(value1, value2));
+} catch (e) {
+    console.log('Error, something bad happened, message: ', e.message);
+}
+
