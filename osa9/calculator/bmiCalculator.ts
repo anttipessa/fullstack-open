@@ -1,4 +1,4 @@
-const calculateBmi = (a: number, b: number): String => {
+export const calculateBmi = (a: number, b: number): String => {
   const cm = a / 100
   const bmi = b / cm / cm
 
@@ -19,7 +19,7 @@ const calculateBmi = (a: number, b: number): String => {
   } else if (bmi >= 40) {
     return "Obese Class III (Very severely obese)"
   }else{
-    return "Something went wrong, please try again."
+    return "malformatted parameters"
   }
 }
 
