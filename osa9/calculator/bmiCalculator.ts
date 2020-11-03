@@ -18,7 +18,7 @@ export const calculateBmi = (a: number, b: number): string => {
     return "Obese Class II (Severely obese)";
   } else if (bmi >= 40) {
     return "Obese Class III (Very severely obese)";
-  }else{
+  } else {
     return "malformatted parameters";
   }
 };
@@ -41,10 +41,9 @@ const parseArguments = (args: Array<string>): BmiValues => {
   }
 };
 
-try {
-  const { value1, value2 } = parseArguments(process.argv);
-  console.log(calculateBmi(value1, value2));
-} catch (e) {
-  let message = e.message as string;
-  console.log('Error, something bad happened, message: ', message);
-}
+  try {
+    const { value1, value2 } = parseArguments(process.argv);
+    console.log(calculateBmi(value1, value2));
+  } catch (e) {
+    console.log('Error, something bad happened, message: ', (e as Error).message);
+  }

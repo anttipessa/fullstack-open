@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "ts-node": "ts-node",
-    "calculateBmi": "npm run ts-node -- bmiCalculator.ts",
-    "calculateExercises": "npm run ts-node -- exerciseCalculator.ts",
-    "start": "npm run ts-node index.ts",
+    "calculateBmi": "ts-node -- bmiCalculator.ts",
+    "calculateExercises": "ts-node -- exerciseCalculator.ts",
+    "start": "ts-node index.ts",
     "dev": "ts-node-dev index.ts",
     "lint": "eslint --ext .ts ."
   },

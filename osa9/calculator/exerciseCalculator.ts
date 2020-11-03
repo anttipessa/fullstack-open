@@ -8,7 +8,7 @@ interface Results {
     average: number;
 }
 
-const calculateExercises = (a: Array<number>, target: number): Results => {
+export const calculateExercises = (a: Array<number>, target: number): Results => {
     const avg = a.reduce((sum, current) => sum + current, 0) / a.length;
     const days = a.filter(a => a != 0);
     let rating;
