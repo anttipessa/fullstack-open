@@ -3,7 +3,6 @@ const app = express();
 
 import { calculateBmi } from "./bmiCalculator";
 
-
 app.get('/hello', (_req, res) => {
     res.send('Hello Full Stack!');
 });
