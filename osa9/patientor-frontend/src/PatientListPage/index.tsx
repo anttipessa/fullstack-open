@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { Container, Table, Button } from "semantic-ui-react";
-
+import { Link } from 'react-router-dom'
 import { PatientFormValues } from "../AddPatientModal/AddPatientForm";
 import AddPatientModal from "../AddPatientModal";
 import { Patient } from "../types";
@@ -10,7 +10,7 @@ import HealthRatingBar from "../components/HealthRatingBar";
 import { useStateValue } from "../state";
 
 const PatientListPage: React.FC = () => {
-  const [{ patients }, dispatch] = useStateValue();
+  const [{ patients, patientInfo }, dispatch] = useStateValue();
 
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
@@ -36,6 +36,23 @@ const PatientListPage: React.FC = () => {
     }
   };
 
+  const getPatient = async (id: string) => {
+    if (patientInfo[id] === undefined) {
+      try {
+        const { data: patientInfo } = await axios.get<Patient>(
+          `${apiBaseUrl}/patients/${id}`
+        );
+
+        dispatch({ type: "GET_PATIENT", payload: patientInfo });
+      } catch (e) {
+        console.error(e.response.data);
+        setError(e.response.data.error);
+      }
+    }
+  }
+
+
+
   return (
     <div className="App">
       <Container textAlign="center">
@@ -52,8 +69,8 @@ const PatientListPage: React.FC = () => {
         </Table.Header>
         <Table.Body>
           {Object.values(patients).map((patient: Patient) => (
-            <Table.Row key={patient.id}>
-              <Table.Cell>{patient.name}</Table.Cell>
+            <Table.Row key={patient.id} onClick={() => getPatient(patient.id)}>
+              <Table.Cell> <Link to={`/patients/${patient.id}`}> {patient.name}</Link></Table.Cell>
               <Table.Cell>{patient.gender}</Table.Cell>
               <Table.Cell>{patient.occupation}</Table.Cell>
               <Table.Cell>
