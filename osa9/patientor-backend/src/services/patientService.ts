@@ -1,4 +1,4 @@
-import patientData from '../../data/patients.json'
+import patientData from '../../data/patients'
 import { Patient, PublicPatient, NewPatientEntry } from '../types'
 import toNewPatientEntry from '../utils'
 
@@ -14,8 +14,6 @@ const getEntries = (): Array<Patient> => {
 
 const getPatient = (id: string): Patient | undefined => {
   const entry = patients.find(a => a.id === id);
-  if(entry === undefined) return undefined;
-  entry.entries = []
   return entry;
 };
 
