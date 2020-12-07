@@ -2,6 +2,7 @@ import React from "react";
 import { useParams } from 'react-router-dom'
 import { useStateValue } from "../state";
 import { Icon } from 'semantic-ui-react';
+import { Entry } from "../types";
 
 const PatientPage: React.FC = () => {
   const [{ patientInfo }] = useStateValue();
@@ -25,6 +26,17 @@ const PatientPage: React.FC = () => {
       </h3>
       <div>ssn: {patient.ssn}</div>
       <div>occupation: {patient.occupation}</div>
+
+      <h4>entries</h4>
+      {(patient.entries).map((entry: Entry) =>
+        <div key={entry.id}> {entry.date} {entry.description}
+          <ul>
+            {entry.diagnosisCodes?.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };
