@@ -7,7 +7,7 @@ import AddPatientModal from "../AddPatientModal";
 import { Patient } from "../types";
 import { apiBaseUrl } from "../constants";
 import HealthRatingBar from "../components/HealthRatingBar";
-import { useStateValue } from "../state";
+import { useStateValue, getPatient, addPatient } from "../state";
 
 const PatientListPage: React.FC = () => {
   const [{ patients, patientInfo }, dispatch] = useStateValue();
@@ -28,7 +28,7 @@ const PatientListPage: React.FC = () => {
         `${apiBaseUrl}/patients`,
         values
       );
-      dispatch({ type: "ADD_PATIENT", payload: newPatient });
+      dispatch(addPatient(newPatient));
       closeModal();
     } catch (e) {
       console.error(e.response.data);
@@ -36,14 +36,13 @@ const PatientListPage: React.FC = () => {
     }
   };
 
-  const getPatient = async (id: string) => {
+  const getPatientInfo = async (id: string) => {
     if (patientInfo[id] === undefined) {
       try {
         const { data: patientInfo } = await axios.get<Patient>(
           `${apiBaseUrl}/patients/${id}`
         );
-
-        dispatch({ type: "GET_PATIENT", payload: patientInfo });
+        dispatch(getPatient(patientInfo));
       } catch (e) {
         console.error(e.response.data);
         setError(e.response.data.error);
@@ -69,7 +68,7 @@ const PatientListPage: React.FC = () => {
         </Table.Header>
         <Table.Body>
           {Object.values(patients).map((patient: Patient) => (
-            <Table.Row key={patient.id} onClick={() => getPatient(patient.id)}>
+            <Table.Row key={patient.id} onClick={() => getPatientInfo(patient.id)}>
               <Table.Cell> <Link to={`/patients/${patient.id}`}> {patient.name}</Link></Table.Cell>
               <Table.Cell>{patient.gender}</Table.Cell>
               <Table.Cell>{patient.occupation}</Table.Cell>
