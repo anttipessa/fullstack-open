@@ -5,7 +5,7 @@ import { Icon } from 'semantic-ui-react';
 import { Entry } from "../types";
 
 const PatientPage: React.FC = () => {
-  const [{ patientInfo }] = useStateValue();
+  const [{ patientInfo, diagnosis }] = useStateValue();
   const { id } = useParams<{ id: string }>();
   const patient = patientInfo[id]
 
@@ -32,7 +32,7 @@ const PatientPage: React.FC = () => {
         <div key={entry.id}> {entry.date} {entry.description}
           <ul>
             {entry.diagnosisCodes?.map((item) => (
-              <li key={item}>{item}</li>
+              <li key={item}>{item}{} {diagnosis[item].name}</li>
             ))}
           </ul>
         </div>
