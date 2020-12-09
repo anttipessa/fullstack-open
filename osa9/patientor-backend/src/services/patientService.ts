@@ -1,5 +1,5 @@
 import patientData from '../../data/patients'
-import { Patient, PublicPatient, NewPatientEntry } from '../types'
+import { Patient, PublicPatient, NewPatientEntry,  NewEntry } from '../types'
 
 const patients: Array<Patient> = patientData;
 
@@ -31,9 +31,21 @@ const addPatient = (entry: NewPatientEntry): Patient => {
   return newPatientEntry;
 };
 
+const addEntry = (entry: NewEntry, id: string): NewEntry => {
+  const newEntry = {
+    id: Math.random().toString(36).slice(2),
+    ...entry
+  };
+  const patient = patients.find(p => p.id === id );
+  patient?.entries.push(newEntry);
+  return newEntry;
+};
+
+
 export default {
   getEntries,
   getPatient,
   getNonSensitiveEntries,
-  addPatient
+  addPatient,
+  addEntry
 }
