@@ -25,12 +25,15 @@ export type Entry =
   | OccupationalHealthcareEntry
   | HealthCheckEntry;
 
+  export type EntryType =  "HealthCheck" | "OccupationalHealthcare" | "Hospital";
 
-interface BaseEntry {
+
+export interface BaseEntry {
   id: string;
   description: string;
   date: string;
   specialist: string;
+  type: EntryType;
   diagnosisCodes?: Array<Diagnosis['code']>;
 }
 
@@ -49,16 +52,25 @@ export interface HealthCheckEntry extends BaseEntry {
 export interface OccupationalHealthcareEntry extends BaseEntry {
   type: "OccupationalHealthcare";
   employerName: string,
-  sickLeave?: {
-    startDate: string,
-    endDate: string
-  }
+  sickLeave?: SickLeave
+}
+
+export interface SickLeave {
+  startDate: string,
+  endDate: string
 }
 
 export interface HospitalEntry extends BaseEntry {
   type: "Hospital";
-  discharge: {
-    date: string,
-    criteria: string,
-  }
+  discharge: Discharge
 }
+
+export interface Discharge {
+  date: string,
+  criteria: string
+}
+
+export type NewEntry =
+  | Omit<HospitalEntry, 'id'>
+  | Omit<OccupationalHealthcareEntry, 'id'>
+  | Omit<HealthCheckEntry, 'id'>;
